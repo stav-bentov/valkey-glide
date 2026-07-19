@@ -1062,7 +1062,7 @@ dependencies = [
 
 [[package]]
 name = "experimental-glide-core"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "async-trait",
  "aws-config",
@@ -1073,8 +1073,8 @@ dependencies = [
  "ctor",
  "directories",
  "experimental-glide-core",
+ "experimental-glide-core-rs-dependency",
  "experimental-glide-logger-core",
- "experimental-glide-redis-rs",
  "experimental-glide-telemetrylib",
  "futures",
  "futures-intrusive",
@@ -1113,18 +1113,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "experimental-glide-logger-core"
-version = "0.1.0"
-dependencies = [
- "file-rotate",
- "once_cell",
- "tracing",
- "tracing-appender",
- "tracing-subscriber",
-]
-
-[[package]]
-name = "experimental-glide-redis-rs"
+name = "experimental-glide-core-rs-dependency"
 version = "0.25.2"
 dependencies = [
  "arc-swap",
@@ -1159,6 +1148,17 @@ dependencies = [
  "tokio-util",
  "tracing",
  "url",
+]
+
+[[package]]
+name = "experimental-glide-logger-core"
+version = "0.1.0"
+dependencies = [
+ "file-rotate",
+ "once_cell",
+ "tracing",
+ "tracing-appender",
+ "tracing-subscriber",
 ]
 
 [[package]]
