@@ -1,5 +1,5 @@
 [package]
-name = "experimental-glide-core"
+name = "experimental-glide-core-lib"
 version = "0.1.1"
 edition = "2024"
 license = "Apache-2.0"
@@ -90,7 +90,7 @@ redis = { path = "./redis-rs/redis", package = "experimental-glide-core-rs-depen
 rustls = { version = "0.23", features = ["aws-lc-rs"]}
 gungraun = "0.19"
 tokio = { version = "1", features = ["rt-multi-thread"] }
-glide-core = { path = ".", package = "experimental-glide-core", features = [
+glide-core = { path = ".", package = "experimental-glide-core-lib", features = [
     "socket-layer",
     "test-util",
 ] } # always enable this feature in tests.
