@@ -1051,9 +1051,9 @@ dependencies = [
  "ctor",
  "directories",
  "experimental-glide-core",
- "experimental-logger-core",
- "experimental-redis",
- "experimental-telemetrylib",
+ "experimental-glide-logger-core",
+ "experimental-glide-redis",
+ "experimental-glide-telemetrylib",
  "futures",
  "futures-intrusive",
  "gungraun",
@@ -1091,7 +1091,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "experimental-logger-core"
+name = "experimental-glide-logger-core"
 version = "0.1.0"
 dependencies = [
  "file-rotate",
@@ -1102,7 +1102,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "experimental-redis"
+name = "experimental-glide-redis"
 version = "0.25.2"
 dependencies = [
  "arc-swap",
@@ -1112,8 +1112,8 @@ dependencies = [
  "crc16",
  "dashmap",
  "dispose",
- "experimental-logger-core",
- "experimental-telemetrylib",
+ "experimental-glide-logger-core",
+ "experimental-glide-telemetrylib",
  "futures",
  "futures-util",
  "itoa",
@@ -1140,11 +1140,11 @@ dependencies = [
 ]
 
 [[package]]
-name = "experimental-telemetrylib"
+name = "experimental-glide-telemetrylib"
 version = "0.1.0"
 dependencies = [
  "chrono",
- "experimental-logger-core",
+ "experimental-glide-logger-core",
  "lazy_static",
  "once_cell",
  "opentelemetry",
