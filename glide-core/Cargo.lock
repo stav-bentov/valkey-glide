@@ -1061,6 +1061,125 @@ dependencies = [
 ]
 
 [[package]]
+name = "experimental-glide-core"
+version = "0.1.0"
+dependencies = [
+ "async-trait",
+ "aws-config",
+ "aws-credential-types",
+ "aws-sigv4",
+ "bytes",
+ "criterion",
+ "ctor",
+ "directories",
+ "experimental-glide-core",
+ "experimental-logger-core",
+ "experimental-redis",
+ "experimental-telemetrylib",
+ "futures",
+ "futures-intrusive",
+ "gungraun",
+ "http 1.4.2",
+ "integer-encoding",
+ "libc",
+ "lz4",
+ "nanoid",
+ "num_cpus",
+ "once_cell",
+ "protobuf",
+ "protobuf-codegen",
+ "rand 0.8.6",
+ "rsevents",
+ "rstest",
+ "rustls",
+ "rustls-pki-types",
+ "serde",
+ "serde_json",
+ "serial_test",
+ "sha1_smol",
+ "socket2",
+ "strum 0.26.3",
+ "strum_macros 0.26.4",
+ "tempfile",
+ "thiserror 2.0.18",
+ "tokio",
+ "tokio-retry2 0.6.2",
+ "tokio-util",
+ "urlencoding",
+ "uuid",
+ "versions",
+ "which 8.0.4",
+ "zstd",
+]
+
+[[package]]
+name = "experimental-logger-core"
+version = "0.1.0"
+dependencies = [
+ "file-rotate",
+ "once_cell",
+ "tracing",
+ "tracing-appender",
+ "tracing-subscriber",
+]
+
+[[package]]
+name = "experimental-redis"
+version = "0.25.2"
+dependencies = [
+ "arc-swap",
+ "async-trait",
+ "bytes",
+ "combine",
+ "crc16",
+ "dashmap",
+ "dispose",
+ "experimental-logger-core",
+ "experimental-telemetrylib",
+ "futures",
+ "futures-util",
+ "itoa",
+ "lazy_static",
+ "lru",
+ "num-bigint",
+ "parking_lot",
+ "percent-encoding",
+ "pin-project-lite",
+ "rand 0.9.4",
+ "rustls",
+ "rustls-pki-types",
+ "rustls-platform-verifier",
+ "ryu",
+ "socket2",
+ "strum 0.28.0",
+ "strum_macros 0.28.0",
+ "tokio",
+ "tokio-retry2 0.5.8",
+ "tokio-rustls",
+ "tokio-util",
+ "tracing",
+ "url",
+]
+
+[[package]]
+name = "experimental-telemetrylib"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "experimental-logger-core",
+ "lazy_static",
+ "once_cell",
+ "opentelemetry",
+ "opentelemetry-otlp",
+ "opentelemetry_sdk",
+ "serde",
+ "serde_json",
+ "thiserror 2.0.18",
+ "tokio",
+ "url",
+]
+
+[[package]]
 name = "fastrand"
 version = "2.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1275,60 +1394,6 @@ dependencies = [
  "rand_core 0.10.1",
  "wasip2",
  "wasip3",
-]
-
-[[package]]
-name = "glide-core"
-version = "0.1.0"
-dependencies = [
- "async-trait",
- "aws-config",
- "aws-credential-types",
- "aws-sigv4",
- "bytes",
- "criterion",
- "ctor",
- "dashmap 5.5.3",
- "directories",
- "futures",
- "futures-intrusive",
- "glide-core",
- "gungraun",
- "http 1.5.0",
- "integer-encoding",
- "libc",
- "logger_core",
- "lz4",
- "nanoid",
- "num_cpus",
- "once_cell",
- "protobuf",
- "protobuf-codegen",
- "rand 0.8.6",
- "redis",
- "rsevents",
- "rstest",
- "rustls",
- "rustls-pki-types",
- "serde",
- "serde_json",
- "serial_test",
- "sha1_smol",
- "sha2",
- "socket2",
- "strum 0.26.3",
- "strum_macros 0.26.4",
- "telemetrylib",
- "tempfile",
- "thiserror 2.0.18",
- "tokio",
- "tokio-retry2 0.6.2",
- "tokio-util",
- "urlencoding",
- "uuid",
- "versions",
- "which 8.0.4",
- "zstd",
 ]
 
 [[package]]
@@ -1927,17 +1992,6 @@ name = "log"
 version = "0.4.32"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "953f07c43838f8e6f9758cab68bf5bed85465e7587ebe0b823f1bcd81978ad3a"
-
-[[package]]
-name = "logger_core"
-version = "0.1.0"
-dependencies = [
- "file-rotate",
- "once_cell",
- "tracing",
- "tracing-appender",
- "tracing-subscriber",
-]
 
 [[package]]
 name = "lru"
@@ -3192,24 +3246,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn",
-]
-
-[[package]]
-name = "telemetrylib"
-version = "0.1.0"
-dependencies = [
- "chrono",
- "lazy_static",
- "logger_core",
- "once_cell",
- "opentelemetry",
- "opentelemetry-otlp",
- "opentelemetry_sdk",
- "serde",
- "serde_json",
- "thiserror 2.0.18",
- "tokio",
- "url",
 ]
 
 [[package]]
