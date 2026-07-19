@@ -1061,7 +1061,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "experimental-glide-core"
+name = "experimental-glide-core-lib"
 version = "0.1.1"
 dependencies = [
  "async-trait",
@@ -1072,7 +1072,7 @@ dependencies = [
  "criterion",
  "ctor",
  "directories",
- "experimental-glide-core",
+ "experimental-glide-core-lib",
  "experimental-glide-core-rs-dependency",
  "experimental-glide-logger-core",
  "experimental-glide-telemetrylib",
