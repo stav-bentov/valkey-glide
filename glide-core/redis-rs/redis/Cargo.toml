@@ -1,5 +1,5 @@
 [package]
-name = "experimental-glide-redis"
+name = "experimental-glide-redis-rs"
 version = "0.25.2"
 keywords = ["redis", "database"]
 description = "Redis driver for Rust."
