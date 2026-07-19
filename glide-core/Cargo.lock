@@ -1052,7 +1052,7 @@ dependencies = [
  "directories",
  "experimental-glide-core",
  "experimental-glide-logger-core",
- "experimental-glide-redis",
+ "experimental-glide-redis-rs",
  "experimental-glide-telemetrylib",
  "futures",
  "futures-intrusive",
@@ -1102,7 +1102,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "experimental-glide-redis"
+name = "experimental-glide-redis-rs"
 version = "0.25.2"
 dependencies = [
  "arc-swap",
