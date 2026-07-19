@@ -18,7 +18,7 @@ name = "glide_core"
 uuid = { version = "1", features = ["v4", "fast-rng"] }
 bytes = "1"
 futures = "^0.3"
-redis = { path = "./redis-rs/redis", version = "0.25.2", package = "experimental-glide-redis", features = [
+redis = { path = "./redis-rs/redis", version = "0.25.2", package = "experimental-glide-redis-rs", features = [
     "aio",
     "keep-alive",
     "tokio-comp",
@@ -86,7 +86,7 @@ serial_test = "3"
 criterion = { version = "^0.8", features = ["html_reports", "async_tokio"] }
 which = "8"
 ctor = "0.10"
-redis = { path = "./redis-rs/redis", package = "experimental-glide-redis", features = ["tls-rustls-insecure"] }
+redis = { path = "./redis-rs/redis", package = "experimental-glide-redis-rs", features = ["tls-rustls-insecure"] }
 rustls = { version = "0.23", features = ["aws-lc-rs"]}
 gungraun = "0.19"
 tokio = { version = "1", features = ["rt-multi-thread"] }
