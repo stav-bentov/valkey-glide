@@ -1,5 +1,5 @@
 [package]
-name = "redis"
+name = "experimental-redis"
 version = "0.25.2"
 keywords = ["redis", "database"]
 description = "Redis driver for Rust."
@@ -16,6 +16,7 @@ all-features = true
 rustdoc-args = ["--cfg", "docsrs"]
 
 [lib]
+name = "redis"
 bench = false
 
 [lints.clippy]
@@ -80,9 +81,9 @@ num-bigint = "0.4"
 
 tracing = "0.1"
 
-telemetrylib = { path = "../../telemetry" }
+telemetrylib = { path = "../../telemetry", version = "0.1.0", package = "experimental-telemetrylib" }
 
-logger_core = { path = "../../../logger_core" }
+logger_core = { path = "../../../logger_core", version = "0.1.0", package = "experimental-logger-core" }
 
 lazy_static = "1"
 lru = "0.18.0"

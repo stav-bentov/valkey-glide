@@ -1,9 +1,16 @@
 [package]
-name = "telemetrylib"
+name = "experimental-telemetrylib"
 version = "0.1.0"
 edition = "2024"
 license = "Apache-2.0"
 authors = ["Valkey GLIDE Maintainers"]
+description = "Telemetry (metrics and tracing) library for Valkey GLIDE"
+repository = "https://github.com/valkey-io/valkey-glide"
+keywords = ["valkey", "glide", "telemetry", "opentelemetry"]
+categories = ["development-tools::profiling"]
+
+[lib]
+name = "telemetrylib"
 
 [dependencies]
 lazy_static = "1"
@@ -18,7 +25,7 @@ opentelemetry = { version = "0.32", features = ["metrics"] }
 opentelemetry_sdk = { version = "0.32", features = ["rt-tokio", "metrics", "experimental_metrics_periodicreader_with_async_runtime", "experimental_trace_batch_span_processor_with_async_runtime"] }
 opentelemetry-otlp = { version = "0.32", features = ["http-proto", "http-json", "reqwest-client", "grpc-tonic"] }
 once_cell = "1"
-logger_core = { path = "../../logger_core" }
+logger_core = { path = "../../logger_core", version = "0.1.0", package = "experimental-logger-core" }
 
 [dev-dependencies]
 tokio = { version = "1", features = ["rt", "macros", "rt-multi-thread", "time"] }

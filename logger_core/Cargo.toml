@@ -1,5 +1,5 @@
 [package]
-name = "logger_core"
+name = "experimental-logger-core"
 version = "0.1.0"
 edition = "2024"
 license = "Apache-2.0"
@@ -10,6 +10,7 @@ keywords = ["valkey", "glide", "logging"]
 categories = ["development-tools::debugging"]
 
 [lib]
+name = "logger_core"
 
 [dev-dependencies]
 rand = "0.8.5"
