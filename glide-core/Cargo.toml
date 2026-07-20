@@ -1,17 +1,24 @@
 [package]
-name = "glide-core"
-version = "0.1.0"
+name = "experimental-glide-core-lib"
+version = "0.1.1"
 edition = "2024"
 license = "Apache-2.0"
 authors = ["Valkey GLIDE Maintainers"]
+description = "Core client library for Valkey GLIDE"
+repository = "https://github.com/valkey-io/valkey-glide"
+keywords = ["valkey", "glide", "redis", "client"]
+categories = ["database"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+name = "glide_core"
 
 [dependencies]
 uuid = { version = "1", features = ["v4", "fast-rng"] }
 bytes = "1"
 futures = "^0.3"
-redis = { path = "./redis-rs/redis", features = [
+redis = { path = "./redis-rs/redis", version = "0.25.2", package = "experimental-glide-core-rs-dependency", features = [
     "aio",
     "keep-alive",
     "tokio-comp",
@@ -22,9 +29,9 @@ redis = { path = "./redis-rs/redis", features = [
 ] }
 rustls = { version = "0.23", features = ["aws-lc-rs"] }
 rustls-pki-types = "1.9"
-telemetrylib = { path = "./telemetry" }
+telemetrylib = { path = "./telemetry", version = "0.1.0", package = "experimental-glide-telemetrylib" }
 tokio = { version = "1", features = ["macros", "time"] }
-logger_core = { path = "../logger_core" }
+logger_core = { path = "../logger_core", version = "0.1.0", package = "experimental-glide-logger-core" }
 tokio-util = { version = "^0.7", features = ["rt"], optional = true }
 num_cpus = { version = "^1", optional = true }
 tokio-retry2 = { version = "0.6", features = ["jitter"] }
@@ -79,11 +86,11 @@ serial_test = "3"
 criterion = { version = "^0.8", features = ["html_reports", "async_tokio"] }
 which = "8"
 ctor = "0.10"
-redis = { path = "./redis-rs/redis", features = ["tls-rustls-insecure"] }
+redis = { path = "./redis-rs/redis", package = "experimental-glide-core-rs-dependency", features = ["tls-rustls-insecure"] }
 rustls = { version = "0.23", features = ["aws-lc-rs"]}
 gungraun = "0.19"
 tokio = { version = "1", features = ["rt-multi-thread"] }
-glide-core = { path = ".", features = [
+glide-core = { path = ".", package = "experimental-glide-core-lib", features = [
     "socket-layer",
     "test-util",
 ] } # always enable this feature in tests.

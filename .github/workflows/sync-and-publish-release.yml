@@ -1,0 +1,115 @@
+name: Sync and Publish Upstream Releases
+
+# Tracks OFFICIAL upstream release tags (valkey-io/valkey-glide), overlays our
+# experimental-glide-* rename (which lives on publish-crates-prep), aligns
+# glide-owned crate versions to the upstream tag (redis-rs keeps its own),
+# and publishes via scripts/publish-experimental-crates.sh.
+#
+# Idempotent: a marker tag (synced-<tag>) on this fork records what was already
+# published, so re-runs on unchanged upstream do nothing.
+
+on:
+  schedule:
+    - cron: '0 6 * * *'   # daily at 06:00 UTC
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (merge + version-set, but no crates.io upload)'
+        type: boolean
+        default: true
+
+# Our overlay branch that holds the Cargo.toml renames.
+env:
+  OVERLAY_BRANCH: publish-crates-prep
+  # '1' = dry-run (manual runs default to true); scheduled runs publish for real.
+  DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && '1' || '0' }}
+
+jobs:
+  sync-and-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write        # to push the marker tag back to the fork
+    steps:
+      - name: Checkout fork (full history + tags)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ env.OVERLAY_BRANCH }}
+
+      - name: Configure git author
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Find latest upstream FINAL release tag
+        id: pick
+        run: |
+          git remote add upstream https://github.com/valkey-io/valkey-glide.git
+          git fetch upstream --tags --quiet
+          # Final releases only: vX.Y.Z with NO -rc/-suffix.  (fix: skip prereleases)
+          LATEST=$(git tag -l --sort=-v:refname 'v*' \
+                   | grep -E '^v[0-9]+\.[0-9]+\.[0-9]+$' | head -n1)
+          echo "tag=$LATEST" >> "$GITHUB_OUTPUT"
+          echo "Latest upstream final release: $LATEST"
+
+      - name: Check if already synced
+        id: gate
+        run: |
+          TAG="${{ steps.pick.outputs.tag }}"
+          if git rev-parse -q --verify "refs/tags/synced-$TAG" >/dev/null; then
+            echo "proceed=false" >> "$GITHUB_OUTPUT"
+            echo "Already synced $TAG — nothing to do."
+          else
+            echo "proceed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout upstream tag and overlay our renames
+        if: steps.gate.outputs.proceed == 'true'
+        run: |
+          TAG="${{ steps.pick.outputs.tag }}"
+          git checkout "tags/$TAG" -b "release-$TAG"
+          # Overlay = merge our rename branch. Our real changes are Cargo.toml only.
+          git merge --no-commit --no-edit "origin/$OVERLAY_BRANCH" || true
+          # Lock/generated files are regenerated in a later step — auto-resolve any
+          # conflicts in them (keep upstream's; content is thrown away anyway).
+          for f in $(git diff --name-only --diff-filter=U); do
+            case "$f" in
+              *Cargo.lock|*package-lock.json|*.lock)
+                git checkout --ours -- "$f" && git add "$f" ;;
+            esac
+          done
+          # Anything still conflicting is a REAL source/Cargo.toml clash — stop safely.
+          if git diff --name-only --diff-filter=U | grep -q .; then
+            echo "Real merge conflicts remain (resolve on $OVERLAY_BRANCH and re-run):"
+            git diff --name-only --diff-filter=U
+            exit 1
+          fi
+          git commit --no-edit || echo "nothing to commit (already up to date)"
+
+      - name: Install Rust
+        if: steps.gate.outputs.proceed == 'true'
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Align versions (scheme B)
+        if: steps.gate.outputs.proceed == 'true'
+        run: python3 scripts/set-experimental-versions.py "${{ steps.pick.outputs.tag }}"
+
+      - name: Refresh lockfiles
+        if: steps.gate.outputs.proceed == 'true'
+        run: |
+          for d in logger_core glide-core/telemetry glide-core/redis-rs/redis glide-core; do
+            ( cd "$d" && cargo update -w 2>/dev/null || cargo generate-lockfile 2>/dev/null || true )
+          done
+
+      - name: Publish changed crates
+        if: steps.gate.outputs.proceed == 'true'
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
+        run: ./scripts/publish-experimental-crates.sh
+
+      - name: Record sync marker tag
+        if: steps.gate.outputs.proceed == 'true' && env.DRY_RUN != '1'
+        run: |
+          TAG="${{ steps.pick.outputs.tag }}"
+          git tag "synced-$TAG"
+          git push origin "synced-$TAG"
