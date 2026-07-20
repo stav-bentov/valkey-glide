@@ -1,0 +1,35 @@
+name: Publish experimental-glide crates
+
+# Runs on every push to your prep branch, and on-demand from the Actions tab.
+# The script publishes only crates whose version isn't already on crates.io,
+# so pushes that don't bump a version are safe no-ops.
+on:
+  push:
+    branches:
+      - publish-crates-prep
+    paths:
+      - '**/Cargo.toml'
+      - 'scripts/publish-experimental-crates.sh'
+      - '.github/workflows/publish-experimental-crates.yml'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Dry run (no upload)'
+        type: boolean
+        default: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Publish changed crates
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CRATES_IO_TOKEN }}
+          # Manual runs default to dry-run; pushes do a real publish.
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run && '1' || '0' }}
+        run: ./scripts/publish-experimental-crates.sh
