@@ -10,7 +10,7 @@ name: Sync and Publish Upstream Releases
 
 on:
   schedule:
-    - cron: '0 */6 * * *'   # every 6h
+    - cron: '0 6 * * *'   # daily at 06:00 UTC
   workflow_dispatch:
     inputs:
       dry_run:
