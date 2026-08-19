@@ -107,5 +107,9 @@ jobs:
         if: steps.gate.outputs.proceed == 'true' && env.DRY_RUN != '1'
         run: |
           TAG="${{ steps.pick.outputs.tag }}"
-          git tag "synced-$TAG"
+          # Tag our own commit, not the release commit we built from: GITHUB_TOKEN
+          # is refused any push that makes new .github/workflows/ content reachable,
+          # and no `permissions:` key can grant it. The tag is only a marker, so
+          # what it points at is irrelevant as long as the name records the release.
+          git tag "synced-$TAG" "$GITHUB_SHA"
           git push origin "synced-$TAG"
