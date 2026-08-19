@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Set experimental-glide crate versions for a sync-and-publish run (scheme B).
 
-glide-owned crates (logger-core, telemetrylib, core-lib) are aligned to the
-upstream release version passed on the CLI. redis-rs keeps its OWN version
-(whatever its Cargo.toml already declares after the upstream merge) — we only
-read it so dependent annotations stay consistent.
+ALL four crates align to the upstream release version passed on the CLI,
+including the redis-rs fork. The fork used to keep its own version (0.25.2),
+but that version never changed, so `is_published` skipped it forever and
+glide-core got built against a stale published fork — v2.5.1 failed exactly
+that way (missing ClusterClientBuilder::recovery_requests_queue_size). We
+publish the fork under our own name, so its version number is ours to pick.
 
 Edits are line-targeted (only [package] version, and version fields on dep
 lines carrying our `package = "experimental-glide-*"` annotation) so nothing
@@ -18,32 +20,13 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 
-# glide-owned crates that align to the upstream tag: dir -> manifest
-GLIDE_OWNED = [
+# Every crate we publish; all align to the upstream tag.
+CRATE_DIRS = [
     "logger_core",
     "glide-core/telemetry",
+    "glide-core/redis-rs/redis",
     "glide-core",
 ]
-REDIS_MANIFEST = "glide-core/redis-rs/redis/Cargo.toml"
-
-# package annotation -> which version to stamp on dep lines referencing it
-# (redis filled in at runtime from its own manifest)
-DEP_PKG_TO_VERSION = {}
-
-
-def read_package_version(manifest: Path) -> str:
-    """Return the version from the [package] table (first version after it)."""
-    in_pkg = False
-    for line in manifest.read_text().splitlines():
-        if line.strip() == "[package]":
-            in_pkg = True
-        elif in_pkg:
-            m = re.match(r'\s*version\s*=\s*"([^"]+)"', line)
-            if m:
-                return m.group(1)
-            if line.strip().startswith("["):  # left [package] without finding it
-                break
-    raise SystemExit(f"!! no [package] version in {manifest}")
 
 
 def set_package_version(manifest: Path, version: str) -> None:
@@ -81,20 +64,19 @@ def main() -> None:
         raise SystemExit("usage: set-experimental-versions.py <GLIDE_VERSION>")
     glide_version = sys.argv[1].lstrip("v")
 
-    redis_version = read_package_version(ROOT / REDIS_MANIFEST)
-    print(f"glide-owned -> {glide_version}; redis-rs keeps {redis_version}")
+    print(f"all experimental-glide crates -> {glide_version}")
 
-    # 1) [package] versions for glide-owned crates
-    for d in GLIDE_OWNED:
+    # 1) [package] versions
+    for d in CRATE_DIRS:
         set_package_version(ROOT / d / "Cargo.toml", glide_version)
 
     # 2) dependent annotations, across every manifest
     pkg_to_version = {
         "experimental-glide-logger-core": glide_version,
         "experimental-glide-telemetrylib": glide_version,
-        "experimental-glide-core-rs-dependency": redis_version,
+        "experimental-glide-core-rs-dependency": glide_version,
     }
-    for d in GLIDE_OWNED + ["glide-core/redis-rs/redis"]:
+    for d in CRATE_DIRS:
         set_dep_versions(ROOT / d / "Cargo.toml", pkg_to_version)
 
     print("versions set.")
